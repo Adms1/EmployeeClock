@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">EmployeeClock</string>
+    <string name="alert_msg">Alert Msg</string>
+    <string name="ok">OK</string>
+    <string name="internet_error">Internet Connection !</string>
+    <string name="internet_connection_error">Admin requires an internet connection.Make sure Wi-Fi or mobile networks are turned on, then try again.</string>
+    <string name="something_wrong">Something Wrong</string>
+    <string name="blank">Blank Filed Not Allowed</string>
+    <string name="false_msg">QR-Code does\'t Match</string>
+    <string name="true_msg">Send Successfully</string>
+</resources>
