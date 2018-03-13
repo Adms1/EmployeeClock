@@ -6,6 +6,6 @@
     <string name="internet_connection_error">Admin requires an internet connection.Make sure Wi-Fi or mobile networks are turned on, then try again.</string>
     <string name="something_wrong">Something Wrong</string>
     <string name="blank">Blank Filed Not Allowed</string>
-    <string name="false_msg">QR-Code does\'t Match</string>
+    <string name="false_msg">QR-Code not found, Try Again...</string>
     <string name="true_msg">Send Successfully</string>
 </resources>

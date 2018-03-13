@@ -41,7 +41,7 @@ import retrofit.client.Response;
 public class MainActivity extends AppCompatActivity {
     ActivityMainBinding mainBinding;
     Activity mContext;
-    String qrCodeStr,qyCodeNameStr;
+    String qrCodeStr, qyCodeNameStr;
     DecoratedBarcodeView barcodeView;
     ImageView barcode_imag;
 
@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
         mainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         mContext = MainActivity.this;
         init();
+
     }
 
     public void init() {
@@ -63,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         barcodeView = (DecoratedBarcodeView) findViewById(R.id.zxing);
         barcode_imag = (ImageView) findViewById(R.id.barcode_imag);
         barcodeView.setStatusText("Scan your QR-Code");
-        barcodeView.decodeContinuous(callback);
+        barcodeView.decodeSingle(callback);
     }
 
     private BarcodeCallback callback = new BarcodeCallback() {
@@ -80,12 +81,12 @@ public class MainActivity extends AppCompatActivity {
                         JSONObject obj = new JSONObject(result.getText());
 
                         qrCodeStr = obj.getString("qrcode");
-                        qyCodeNameStr=obj.getString("name");
+//                        qyCodeNameStr=obj.getString("name");
 //                        Log.d("Response","Code:"+qrCodeStr+"Name:"+qyCodeNameStr);
-                        if(!qrCodeStr.equalsIgnoreCase("")) {
+                        if (!qrCodeStr.equalsIgnoreCase("")) {
                             callEmployeeApi();
-                        }else{
-                            Util.ping(mContext,"Scan Proper QR-Code");
+                        } else {
+                            Util.ping(mContext, "QR-Code not Match. Try Again...");
                         }
 
                     } catch (JSONException e) {
@@ -102,8 +103,22 @@ public class MainActivity extends AppCompatActivity {
     };
 
     public void onClick(View view) {
-        barcodeView.setVisibility(View.VISIBLE);
-        view.setVisibility(View.GONE);
+        int id = view.getId();
+        switch (id) {
+            case R.id.barcode_imag:
+                barcodeView.setVisibility(View.VISIBLE);
+                view.setVisibility(View.GONE);
+                break;
+
+            case R.id.continue_btn:
+                recreate();
+                break;
+
+            case R.id.close_btn:
+                finish();
+                break;
+        }
+
     }
 
     //Getting the scan results
@@ -167,20 +182,23 @@ public class MainActivity extends AppCompatActivity {
                 if (employeeModel.getSuccess().equalsIgnoreCase("False")) {
                     Util.dismissDialog();
                     Util.ping(mContext, getString(R.string.false_msg));
+                    recreate();
                     return;
                 }
                 if (employeeModel.getSuccess().equalsIgnoreCase("True")) {
                     Util.dismissDialog();
 
-                    if (employeeModel.getEmployeeName().equalsIgnoreCase(qyCodeNameStr)) {
-                        barcodeView.setVisibility(View.GONE);
-                        barcode_imag.setVisibility(View.GONE);
-                        mainBinding.rightClick.setVisibility(View.VISIBLE);
-                        mainBinding.empoloyeeName.setVisibility(View.VISIBLE);
-                        mainBinding.empoloyeeName.setText(employeeModel.getEmployeeName());
-                    } else {
-                        Util.ping(mContext,"Not Match");
-                    }
+//                    if (employeeModel.getEmployeeName().equalsIgnoreCase(qyCodeNameStr)) {
+                    barcodeView.setVisibility(View.GONE);
+                    barcode_imag.setVisibility(View.GONE);
+                    mainBinding.continueBtn.setVisibility(View.VISIBLE);
+                    mainBinding.closeBtn.setVisibility(View.VISIBLE);
+                    mainBinding.rightClick.setVisibility(View.VISIBLE);
+                    mainBinding.empoloyeeName.setVisibility(View.VISIBLE);
+                    mainBinding.empoloyeeName.setText(employeeModel.getEmployeeName());
+//                    } else {
+//                        Util.ping(mContext,"Not Match");
+//                    }
                 }
             }
 
@@ -204,6 +222,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+
     }
 
     @Override
